@@ -23,7 +23,7 @@
 (task-options!
   pom {:project     'Memkits/recursive-tasks
        :version     +version+
-       :description "Workflow"
+       :description "Recursive Tasks"
        :url         "https://github.com/Memkits/recursive-tasks"
        :scm         {:url "https://github.com/Memkits/recursive-tasks"}
        :license     {"MIT" "http://opensource.org/licenses/mit-license.php"}})
@@ -33,7 +33,7 @@
   (make-html
     (html {}
     (head {}
-      (title (use-text "Stack Workflow"))
+      (title (use-text "Recursive Tasks"))
       (link {:attrs {:rel "icon" :type "image/png" :href "mvc-works-192x192.png"}})
       (if (:build? data)
         (link (:attrs {:rel "manifest" :href "manifest.json"})))
