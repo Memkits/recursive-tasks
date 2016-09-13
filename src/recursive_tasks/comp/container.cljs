@@ -11,8 +11,8 @@
 (defn render [store]
   (fn [state mutate!]
     (div
-      {:style (merge ui/global)}
+      {:style (merge (merge ui/global {:padding 16}))}
       (comp-task-list (:tasks store) [:tasks])
-      (comp-debug store {:bottom 0}))))
+      (comment comp-debug store {:bottom 0}))))
 
 (def comp-container (create-comp :container render))

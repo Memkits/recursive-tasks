@@ -5,27 +5,48 @@
             [respo.alias :refer [create-comp div span]]
             [respo.comp.space :refer [comp-space]]
             [respo.comp.text :refer [comp-text]]
-            [recursive-tasks.comp.task :refer [comp-task]]))
+            [recursive-tasks.comp.task :refer [comp-task]]
+            [recursive-tasks.style.widget :as widget]))
+
+(declare comp-task-list)
+
+(declare render)
 
 (defn on-add [path] (fn [e dispatch!] (dispatch! :add-task path)))
+
+(def style-list
+ {:border-style "solid",
+  :border-left-width 2,
+  :border-right-width 0,
+  :border-bottom-width 0,
+  :border-top-width 0,
+  :border-color (hsl 0 0 80)})
+
+(def style-toolbar {:padding 8})
 
 (defn render [tasks path]
   (fn [state mutate!]
     (div
-      {}
+      {:style style-list}
       (div
         {}
         (->>
           tasks
           (map-indexed
-            (fn [idx task] [(:id task)
-                            (div
-                              {}
-                              (comp-task task (conj path idx)))]))))
+            (fn [idx task]
+              (let [child-path (conj path idx)]
+                [(:id task)
+                 (div
+                   {:style (merge ui/row {:padding "0px 8px"})}
+                   (comp-task task child-path)
+                   (if (not (:done? task))
+                     (comp-task-list
+                       (:sub-tasks task)
+                       (conj child-path :sub-tasks))))])))))
       (div
-        {}
+        {:style style-toolbar}
         (div
-          {:style ui/button, :event {:click (on-add path)}}
-          (comp-text "add one" nil))))))
+          {:style widget/button, :event {:click (on-add path)}}
+          (comp-text "add" nil))))))
 
 (def comp-task-list (create-comp :task-list render))
