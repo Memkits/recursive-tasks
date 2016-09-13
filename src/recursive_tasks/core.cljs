@@ -12,6 +12,7 @@
 (defonce store-ref (atom schema/store))
 
 (defn dispatch! [op op-data]
+  (println "dispatch!" op op-data)
   (let [op-id (.valueOf (js/Date.))
         new-store (updater @store-ref op op-data op-id)]
     (reset! store-ref new-store)))
