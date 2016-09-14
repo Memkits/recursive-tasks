@@ -22,7 +22,7 @@
   :border-top-width 0,
   :border-color (hsl 0 0 80)})
 
-(def style-toolbar {:padding 8})
+(def style-toolbar {:padding "4px 12px"})
 
 (defn render [tasks path]
   (fn [state mutate!]
@@ -39,6 +39,7 @@
                  (div
                    {:style (merge ui/row {:padding "0px 8px"})}
                    (comp-task task child-path)
+                   (comp-space "8px" nil)
                    (if (not (:done? task))
                      (comp-task-list
                        (:sub-tasks task)
@@ -46,7 +47,8 @@
       (div
         {:style style-toolbar}
         (div
-          {:style widget/button, :event {:click (on-add path)}}
-          (comp-text "add" nil))))))
+          {:style widget/icon,
+           :event {:click (on-add path)},
+           :attrs {:class-name "ion-ios-plus-empty"}})))))
 
 (def comp-task-list (create-comp :task-list render))

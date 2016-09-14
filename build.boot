@@ -35,6 +35,8 @@
     (head {}
       (title (use-text "Recursive Tasks"))
       (link {:attrs {:rel "icon" :type "image/png" :href "mvc-works-192x192.png"}})
+      (link {:attrs {:rel "stylesheet" :type "text/css"
+        :href "http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"}})
       (if (:build? data)
         (link (:attrs {:rel "manifest" :href "manifest.json"})))
       (meta'{:attrs {:charset "utf-8"}})

@@ -2,6 +2,7 @@
 (ns recursive-tasks.comp.task
   (:require [hsl.core :refer [hsl]]
             [respo-ui.style :as ui]
+            [recursive-tasks.style.widget :as widget]
             [respo.alias :refer [create-comp div input span]]
             [respo.comp.space :refer [comp-space]]
             [respo.comp.text :refer [comp-text]]
@@ -11,22 +12,18 @@
   (fn [e dispatch!]
     (let [content (:value e)] (dispatch! :update-task [path content]))))
 
-(def style-task {:padding "4px 8px"})
+(def style-task {:padding "4px 4px"})
 
 (def style-toggler
- (let [size 24]
-   {:background-color (hsl 0 0 80),
-    :width size,
-    :cursor "pointer",
-    :height size}))
+ {:color (hsl 0 0 90), :font-size "16px", :cursor "pointer"})
 
-(def style-done {:background-color (hsl 0 0 40)})
+(def style-done {:color (hsl 0 0 0)})
 
 (defn on-toggle [path] (fn [e dispatch!] (dispatch! :toggle-task path)))
 
 (def style-remove
- (let [size 16]
-   {:background-color (hsl 0 80 70),
+ (let [size 12]
+   {:color (hsl 0 80 70),
     :width size,
     :cursor "pointer",
     :border-radius (str (/ size 2) "px"),
@@ -40,7 +37,8 @@
       {:style (merge ui/row style-task {:align-items "flex-start"})}
       (div
         {:style (merge style-toggler (if (:done? task) style-done)),
-         :event {:click (on-toggle path)}})
+         :event {:click (on-toggle path)},
+         :attrs {:class-name "ion-android-done"}})
       (comp-space "8px" nil)
       (input
         {:style
@@ -58,6 +56,9 @@
          :event {:input (on-input path)},
          :attrs {:placeholder "write task", :value (:text task)}})
       (comp-space "8px" nil)
-      (div {:style style-remove, :event {:click (on-remove path)}}))))
+      (div
+        {:style (merge widget/icon style-remove),
+         :event {:click (on-remove path)},
+         :attrs {:class-name "ion-ios-close-outline"}}))))
 
 (def comp-task (create-comp :task render))
