@@ -17,6 +17,19 @@
                       (subvec tasks 0 idx)
                       (subvec tasks (inc idx))))))))))
 
+(defn move-up [store op-data op-id]
+  (let [path op-data]
+    (update-in
+      store
+      (butlast path)
+      (fn [tasks]
+        (let [position (last path)]
+          (if (pos? position)
+            (-> tasks
+             (assoc position (get tasks (dec position)))
+             (assoc (dec position) (get tasks position)))
+            tasks))))))
+
 (defn toggle-task [store op-data op-id]
   (let [path op-data]
     (update-in store path (fn [task] (update task :done? not)))))
@@ -34,6 +47,18 @@
 
 (defn default-handler [store op-data op-id] store)
 
+(defn move-down [store op-data op-id]
+  (let [path op-data position (last path)]
+    (update-in
+      store
+      (butlast path)
+      (fn [tasks]
+        (if (< position (dec (count tasks)))
+          (-> tasks
+           (assoc position (get tasks (inc position)))
+           (assoc (inc position) (get tasks position)))
+          tasks)))))
+
 (defn updater [store op op-data op-id]
   (let [handler (case
                   op
@@ -45,5 +70,9 @@
                   remove-task
                   :toggle-task
                   toggle-task
+                  :move-up
+                  move-up
+                  :move-down
+                  move-down
                   default-handler)]
     (handler store op-data op-id)))

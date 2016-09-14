@@ -31,6 +31,17 @@
 
 (defn on-remove [path] (fn [e dispatch!] (dispatch! :remove-task path)))
 
+(defn on-keydown [path]
+  (fn [e dispatch!]
+    (let [event (:original-event e)
+          meta-key? (or (aget event "metaKey") (aget event "ctrlKey"))]
+      (cond
+        (and meta-key? (= 38 (:key-code e))) (dispatch! :move-up path)
+        (and meta-key? (= 40 (:key-code e))) (dispatch!
+                                               :move-down
+                                               path)
+        :else nil))))
+
 (defn render [task path]
   (fn [state mutate!]
     (div
@@ -53,7 +64,7 @@
                   (:text task)
                   14
                   (:font-family ui/input))))}),
-         :event {:input (on-input path)},
+         :event {:keydown (on-keydown path), :input (on-input path)},
          :attrs {:placeholder "write task", :value (:text task)}})
       (comp-space "8px" nil)
       (div
