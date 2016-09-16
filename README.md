@@ -4,9 +4,13 @@ Recursive Tasks
 
 > trying to make a task manager..
 
-### Workflow
+http://repo.tiye.me/Memkits/recursive-tasks/
 
-https://github.com/mvc-works/stack-workflow
+### Develop
+
+Workflow https://github.com/mvc-works/stack-workflow
+
+Color Scheme http://colorpalettes.net/color-palette-2511/
 
 ### License
 

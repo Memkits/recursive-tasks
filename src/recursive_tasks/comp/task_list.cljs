@@ -6,7 +6,8 @@
             [respo.comp.space :refer [comp-space]]
             [respo.comp.text :refer [comp-text]]
             [recursive-tasks.comp.task :refer [comp-task]]
-            [recursive-tasks.style.widget :as widget]))
+            [recursive-tasks.style.widget :as widget]
+            [recursive-tasks.style.color :as color]))
 
 (declare comp-task-list)
 
@@ -16,11 +17,11 @@
 
 (def style-list
  {:border-style "solid",
-  :border-left-width 2,
+  :border-left-width 1,
   :border-right-width 0,
   :border-bottom-width 0,
   :border-top-width 0,
-  :border-color (hsl 0 0 80)})
+  :border-color color/light-green})
 
 (def style-toolbar {:padding "4px 12px"})
 
@@ -37,7 +38,10 @@
               (let [child-path (conj path idx)]
                 [(:id task)
                  (div
-                   {:style (merge ui/row {:padding "0px 8px"})}
+                   {:style
+                    (merge
+                      ui/row
+                      {:align-items "center", :padding "0px 8px"})}
                    (comp-task task child-path)
                    (comp-space "8px" nil)
                    (if (not (:done? task))

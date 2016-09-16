@@ -6,26 +6,28 @@
             [respo.alias :refer [create-comp div input span]]
             [respo.comp.space :refer [comp-space]]
             [respo.comp.text :refer [comp-text]]
-            [recursive-tasks.util.measure :refer [text-width]]))
+            [recursive-tasks.util.measure :refer [text-width]]
+            [recursive-tasks.style.color :as color]))
 
 (defn on-input [path]
   (fn [e dispatch!]
     (let [content (:value e)] (dispatch! :update-task [path content]))))
 
-(def style-task {:padding "4px 4px"})
+(def style-task {:align-items "center", :padding "4px 4px"})
 
 (def style-toggler
- {:color (hsl 0 0 90), :font-size "16px", :cursor "pointer"})
+ {:color color/light-green, :font-size "16px", :cursor "pointer"})
 
-(def style-done {:color (hsl 0 0 0)})
+(def style-done {:color color/purple})
 
 (defn on-toggle [path] (fn [e dispatch!] (dispatch! :toggle-task path)))
 
 (def style-remove
  (let [size 12]
-   {:color (hsl 0 80 70),
+   {:color color/red,
     :width size,
     :cursor "pointer",
+    :opacity 0.5,
     :border-radius (str (/ size 2) "px"),
     :height size}))
 
@@ -45,7 +47,7 @@
 (defn render [task path]
   (fn [state mutate!]
     (div
-      {:style (merge ui/row style-task {:align-items "flex-start"})}
+      {:style (merge ui/row style-task)}
       (div
         {:style (merge style-toggler (if (:done? task) style-done)),
          :event {:click (on-toggle path)},
@@ -54,8 +56,11 @@
       (input
         {:style
          (merge
-           ui/input
-           {:width
+           (merge
+             ui/input
+             {:color (if (:done? task) color/light-green color/dark)})
+           {:background-color color/white,
+            :width
             (max
               80
               (+
@@ -65,11 +70,14 @@
                   14
                   (:font-family ui/input))))}),
          :event {:keydown (on-keydown path), :input (on-input path)},
-         :attrs {:placeholder "write task", :value (:text task)}})
+         :attrs
+         {:placeholder "write task",
+          :value (:text task),
+          :autofocus true}})
       (comp-space "8px" nil)
       (div
         {:style (merge widget/icon style-remove),
          :event {:click (on-remove path)},
-         :attrs {:class-name "ion-ios-close-outline"}}))))
+         :attrs {:class-name "ion-ios-close-empty"}}))))
 
 (def comp-task (create-comp :task render))
