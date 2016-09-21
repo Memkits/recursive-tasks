@@ -21,7 +21,8 @@
   :border-right-width 0,
   :border-bottom-width 0,
   :border-top-width 0,
-  :border-color color/light-green})
+  :border-color color/light-green,
+  :border-radius "16px"})
 
 (def style-toolbar {:padding "4px 12px"})
 

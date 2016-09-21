@@ -9,7 +9,12 @@
             [recursive-tasks.comp.container :refer [comp-container]]
             [cljs.reader :refer [read-string]]))
 
-(defonce store-ref (atom schema/store))
+(def cache-key "recursive-tasks")
+
+(defonce store-ref
+ (atom
+   (let [content (.getItem js/localStorage cache-key)]
+     (if (string? content) (read-string content) schema/store))))
 
 (defn dispatch! [op op-data]
   (println "dispatch!" op op-data)
@@ -28,11 +33,16 @@
   (render-app!)
   (println "code update."))
 
+(defn save-storage! []
+  (let [content (pr-str @store-ref)]
+    (.setItem js/localStorage cache-key content)))
+
 (defn -main []
   (enable-console-print!)
   (render-app!)
   (add-watch store-ref :changes render-app!)
   (add-watch states-ref :changes render-app!)
+  (.addEventListener js/window "beforeunload" save-storage!)
   (println "app started!"))
 
 (set! (.-onload js/window) -main)
