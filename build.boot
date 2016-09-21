@@ -8,7 +8,7 @@
                  [adzerk/boot-test          "1.1.2"       :scope "test"]
                  [mvc-works/hsl             "0.1.2"]
                  [respo/ui                  "0.1.2"]
-                 [respo                     "0.3.21"]])
+                 [respo                     "0.3.23"]])
 
 (require '[adzerk.boot-cljs   :refer [cljs]]
          '[adzerk.boot-reload :refer [reload]]
@@ -29,7 +29,7 @@
        :license     {"MIT" "http://opensource.org/licenses/mit-license.php"}})
 
 (defn use-text [x] {:attrs {:innerHTML x}})
-(defn html-dsl [data fileset]
+(defn html-dsl [data fileset ssr-stages]
   (make-html
     (html {}
     (head {}
@@ -41,6 +41,7 @@
         (link (:attrs {:rel "manifest" :href "manifest.json"})))
       (meta'{:attrs {:charset "utf-8"}})
       (meta' {:attrs {:name "viewport" :content "width=device-width, initial-scale=1"}})
+      (meta' {:attrs {:id "ssr-stages" :content (pr-str ssr-stages)}})
       (style (use-text "body {margin: 0;}"))
       (style (use-text "body * {box-sizing: border-box;}"))
       (script {:attrs {:id "config" :type "text/edn" :innerHTML (pr-str data)}}))
@@ -53,9 +54,9 @@
   [d data VAL edn "data piece for rendering"]
   (with-pre-wrap fileset
     (let [tmp (tmp-dir!)
-          out (io/file tmp "index.html")]
+          out (io/file tmp "dev.html")]
       (empty-dir! tmp)
-      (spit out (html-dsl data fileset))
+      (spit out (html-dsl data fileset #{}))
       (-> fileset
         (add-resource tmp)
         (commit!)))))

@@ -6,7 +6,7 @@
             [respo.alias :refer [create-comp div input span]]
             [respo.comp.space :refer [comp-space]]
             [respo.comp.text :refer [comp-text]]
-            [recursive-tasks.util.measure :refer [text-width]]
+            [respo.util.detect :refer [text-width]]
             [recursive-tasks.style.color :as color]))
 
 (defn on-input [path]
